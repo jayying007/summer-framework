@@ -1,5 +1,7 @@
 package org.summer.framework.helper;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.summer.framework.annotation.Inject;
 import org.summer.framework.util.ArrayUtil;
 import org.summer.framework.util.CollectionUtil;
@@ -13,6 +15,8 @@ import java.util.Map;
  * @date 2020/12/21
  */
 public class IocHelper {
+    private static final Logger logger = LoggerFactory.getLogger(IocHelper.class);
+
     static {
         //获取所有的 Bean 类与 Bean 实例之间的映射关系
         Map<Class<?>, Object> beanMap = BeanHelper.getBeanMap();
@@ -20,6 +24,7 @@ public class IocHelper {
             for (Map.Entry<Class<?>, Object> beanEntry : beanMap.entrySet()) {
                 Class<?> beanClass = beanEntry.getKey();
                 Object beanInstance = beanEntry.getValue();
+                logger.debug(beanClass.getName() + "--" + beanInstance);
                 // 获取 Bean 类定义的所有成员变量
                 Field[] beanFields = beanClass.getDeclaredFields();
                 if (ArrayUtil.isNotEmpty(beanFields)) {

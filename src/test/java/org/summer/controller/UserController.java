@@ -5,8 +5,6 @@ import org.summer.framework.annotation.Controller;
 import org.summer.framework.bean.Param;
 import org.summer.framework.bean.View;
 
-import java.util.List;
-
 /**
  * @author ZhuangJieYing
  * @date 2020/12/21

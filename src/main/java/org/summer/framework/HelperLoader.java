@@ -1,9 +1,6 @@
 package org.summer.framework;
 
-import org.summer.framework.helper.BeanHelper;
-import org.summer.framework.helper.ClassHelper;
-import org.summer.framework.helper.ControllerHelper;
-import org.summer.framework.helper.IocHelper;
+import org.summer.framework.helper.*;
 import org.summer.framework.util.ClassUtil;
 
 /**
@@ -17,6 +14,7 @@ public class HelperLoader {
         Class<?>[] classList = {
                 ClassHelper.class,
                 BeanHelper.class,
+                AopHelper.class,
                 IocHelper.class,
                 ControllerHelper.class
         };
