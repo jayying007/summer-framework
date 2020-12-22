@@ -36,7 +36,13 @@ public class ReflectionUtil {
      * @param args
      * @return
      */
-    public static Object invokeMethod(Object obj, Method method, Object args) {
+    public static Object invokeMethod(Object obj, Method method, Object... args) {
+        logger.debug("反射方法:" + method.getName());
+        logger.debug("参数:");
+        for(Object arg : args) {
+            logger.debug(arg.toString());
+        }
+        logger.debug("---end---");
         Object result;
         try {
             method.setAccessible(true);

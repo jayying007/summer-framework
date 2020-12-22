@@ -15,4 +15,5 @@ public interface ConfigConstant {
     String APP_BASE_PACKAGE = "summer.framework.app.base_package";
     String APP_JSP_PATH = "summer.framework.app.jsp_path";
     String APP_ASSET_PATH = "summer.framework.app.asset_path";
+    String APP_UPLOAD_LIMIT = "smart.framework.app.upload_limit";
 }
