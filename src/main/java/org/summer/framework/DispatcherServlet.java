@@ -51,45 +51,50 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //
-        String requestMethod = request.getMethod().toLowerCase();
-        String requestPath = request.getPathInfo();
+        ServletHelper.init(request, response);
+        try {
+            String requestMethod = request.getMethod().toLowerCase();
+            String requestPath = request.getPathInfo();
 
-        if(requestPath.equals("/favicon.ico")) {
-            return;
+            if(requestPath.equals("/favicon.ico")) {
+                return;
+            }
+
+            Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
+            if (handler != null) {
+                // 获取 Controller 类及其 Bean 实例
+                Class<?> controllerClass = handler.getControllerClass();
+                Object controllerBean = BeanHelper.getBean(controllerClass);
+
+                Param param;
+                if(UploadHelper.isMultipart(request)) {
+                    param = UploadHelper.createParam(request);
+                } else {
+                    param = RequestHelper.createParam(request);
+                }
+
+                Object result;
+                // 调用 Action 方法
+                Method actionMethod = handler.getActionMethod();
+                logger.debug("调用方法：" + controllerClass.getName() + "." + actionMethod.getName());
+                if (param.isEmpty()) {
+                    logger.debug("参数为空-->" + param.toString());
+                    result = ReflectionUtil.invokeMethod(controllerBean, actionMethod);
+                } else {
+                    result = ReflectionUtil.invokeMethod(controllerBean, actionMethod, param);
+                }
+
+                // 处理 Action 方法返回值
+                if (result instanceof View) {
+                    handleViewResult((View)result, request, response);
+                } else if (result instanceof Data) {
+                    handleDataResult((Data)result, response);
+                }
+            }
+        } finally {
+            ServletHelper.destroy();
         }
 
-        Handler handler = ControllerHelper.getHandler(requestMethod, requestPath);
-        if (handler != null) {
-            // 获取 Controller 类及其 Bean 实例
-            Class<?> controllerClass = handler.getControllerClass();
-            Object controllerBean = BeanHelper.getBean(controllerClass);
-
-            Param param;
-            if(UploadHelper.isMultipart(request)) {
-                param = UploadHelper.createParam(request);
-            } else {
-                param = RequestHelper.createParam(request);
-            }
-
-            Object result;
-            // 调用 Action 方法
-            Method actionMethod = handler.getActionMethod();
-            logger.debug("调用方法：" + controllerClass.getName() + "." + actionMethod.getName());
-            if (param.isEmpty()) {
-                logger.debug("参数为空-->" + param.toString());
-                result = ReflectionUtil.invokeMethod(controllerBean, actionMethod);
-            } else {
-                result = ReflectionUtil.invokeMethod(controllerBean, actionMethod, param);
-            }
-
-            // 处理 Action 方法返回值
-            if (result instanceof View) {
-                handleViewResult((View)result, request, response);
-            } else if (result instanceof Data) {
-                handleDataResult((Data)result, response);
-            }
-        }
     }
 
     private void handleViewResult(View view, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
