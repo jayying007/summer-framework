@@ -45,6 +45,13 @@ public class ClassUtil {
     }
 
     /**
+     * 加载类（默认将初始化类）
+     */
+    public static Class<?> loadClass(String className) {
+        return loadClass(className, true);
+    }
+
+    /**
      * 获取指定包名下的所有类
      * @param packageName 包名
      * @return 包名下类的集合

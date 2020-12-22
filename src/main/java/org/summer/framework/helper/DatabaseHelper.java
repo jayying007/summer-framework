@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.summer.framework.util.CollectionUtil;
 
+import javax.sql.DataSource;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -48,6 +49,13 @@ public class DatabaseHelper {
         DATA_SOURCE.setUrl(URL);
         DATA_SOURCE.setUsername(USERNAME);
         DATA_SOURCE.setPassword(PASSWORD);
+    }
+
+    /**
+     * 获取数据源
+     */
+    public static DataSource getDataSource() {
+        return DATA_SOURCE;
     }
 
     public static Connection getConnection() {

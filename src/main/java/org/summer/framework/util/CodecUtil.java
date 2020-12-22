@@ -1,5 +1,6 @@
 package org.summer.framework.util;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,5 +44,12 @@ public class CodecUtil {
             throw new RuntimeException(e);
         }
         return target;
+    }
+
+    /**
+     * MD5 加密
+     */
+    public static String md5(String source) {
+        return DigestUtils.md5Hex(source);
     }
 }
