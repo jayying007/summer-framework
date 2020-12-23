@@ -19,6 +19,7 @@ public class ProxyManager {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static <T> T createProxy(final Class<T> targetClass, final List<Proxy> proxyList) {
         // 使用CGLib提供的Enhance#create方法来创建代理对象
         // 将intercept的参数传入ProxyChain的构造器中

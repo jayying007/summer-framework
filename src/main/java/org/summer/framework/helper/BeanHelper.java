@@ -39,6 +39,7 @@ public class BeanHelper {
      * @param <T>
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static <T> T getBean(Class<T> clz) {
         if (!BEAN_MAP.containsKey(clz)) {
             throw new RuntimeException("can not get bean by class: "  + clz);

@@ -2,9 +2,7 @@ package org.summer.framework.helper;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.handlers.BeanHandler;
-import org.apache.commons.dbutils.handlers.BeanListHandler;
-import org.apache.commons.dbutils.handlers.MapListHandler;
+import org.apache.commons.dbutils.handlers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.summer.framework.util.CollectionUtil;
@@ -15,9 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author ZhuangJieYing
@@ -182,6 +178,105 @@ public class DatabaseHelper {
         }
         return result;
     }
+
+    /**
+     * 查询并返回单个列值
+     */
+    public static <T> T query(String sql, Object... params) {
+        T obj;
+        try {
+            Connection conn = getConnection();
+            obj = QUERY_RUNNER.query(conn, sql, new ScalarHandler<T>(), params);
+        } catch (SQLException e) {
+            logger.error("query failure", e);
+            throw new RuntimeException(e);
+        }
+        return obj;
+    }
+
+    /**
+     * 查询并返回多个列值
+     */
+    public static <T> List<T> queryList(String sql, Object... params) {
+        List<T> list;
+        try {
+            Connection conn = getConnection();
+            list = QUERY_RUNNER.query(conn, sql, new ColumnListHandler<T>(), params);
+        } catch (SQLException e) {
+            logger.error("query list failure", e);
+            throw new RuntimeException(e);
+        }
+        return list;
+    }
+
+    /**
+     * 查询并返回多个列值（具有唯一性）
+     */
+    public static <T> Set<T> querySet(String sql, Object... params) {
+        Collection<T> valueList = queryList(sql, params);
+        return new LinkedHashSet<T>(valueList);
+    }
+
+    /**
+     * 查询并返回数组
+     */
+    public static Object[] queryArray(String sql, Object... params) {
+        Object[] resultArray;
+        try {
+            Connection conn = getConnection();
+            resultArray = QUERY_RUNNER.query(conn, sql, new ArrayHandler(), params);
+        } catch (SQLException e) {
+            logger.error("query array failure", e);
+            throw new RuntimeException(e);
+        }
+        return resultArray;
+    }
+
+    /**
+     * 查询并返回数组列表
+     */
+    public static List<Object[]> queryArrayList(String sql, Object... params) {
+        List<Object[]> resultArrayList;
+        try {
+            Connection conn = getConnection();
+            resultArrayList = QUERY_RUNNER.query(conn, sql, new ArrayListHandler(), params);
+        } catch (SQLException e) {
+            logger.error("query array list failure", e);
+            throw new RuntimeException(e);
+        }
+        return resultArrayList;
+    }
+
+    /**
+     * 查询并返回结果集映射（列名 => 列值）
+     */
+    public static Map<String, Object> queryMap(String sql, Object... params) {
+        Map<String, Object> resultMap;
+        try {
+            Connection conn = getConnection();
+            resultMap = QUERY_RUNNER.query(conn, sql, new MapHandler(), params);
+        } catch (SQLException e) {
+            logger.error("query map failure", e);
+            throw new RuntimeException(e);
+        }
+        return resultMap;
+    }
+
+    /**
+     * 查询并返回结果集映射列表（列名 => 列值）
+     */
+    public static List<Map<String, Object>> queryMapList(String sql, Object... params) {
+        List<Map<String, Object>> resultMapList;
+        try {
+            Connection conn = getConnection();
+            resultMapList = QUERY_RUNNER.query(conn, sql, new MapListHandler(), params);
+        } catch (SQLException e) {
+            logger.error("query map list failure", e);
+            throw new RuntimeException(e);
+        }
+        return resultMapList;
+    }
+
     /**
      * 执行更新语句（包括update、insert、delete）
      * @param sql
