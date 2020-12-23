@@ -7,4 +7,6 @@
 4. 可通过注解开启事务
 5. 支持IOC,可通过依赖注入
 ## 已实现插件
-基于Shiro的安全控制插件 summer-plugin-security
+基于Shiro的安全控制插件 [summer-plugin-security](https://github.com/jayying007/summer-plugin-security)
+## 测试
+这里有一个使用该框架开发的demo项目, [summer-project](https://github.com/jayying007/summer-project)
